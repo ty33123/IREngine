@@ -1,0 +1,93 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/lib/html5shiv.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/lib/respond.min.js')}}"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='admin/static/h-ui/css/H-ui.min.css')}}" />
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='admin/static/h-ui.admin/css/H-ui.admin.css')}}" />
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='admin/lib/Hui-iconfont/1.0.8/iconfont.css')}}" />
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='admin/static/h-ui.admin/skin/default/skin.css')}}" id="skin" />
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='admin/static/h-ui.admin/css/style.css')}}" />
+<!--[if IE 6]>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/lib/DD_belatedPNG_0.0.8a-min.js')}}"></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>任务异常列表 - 定时任务管理 - H-ui.admin v3.1</title>
+
+</head>
+<body>
+<article class="page-container">
+    <div class="text-c"> 任务查找：
+		<input type="text" class="input-text" style="width:250px" placeholder="输入任务名称" id="spider_name" name="">
+		<button type="submit" class="btn btn-success" id="" name="" onclick="error_list()"><i class="Hui-iconfont">&#xe665;</i> 搜异常</button>
+	</div>
+    <table class="table table-border table-bordered table-bg">
+		<thead>
+			<tr class="text-c">
+				<th width="30">ID</th>
+				<th width="90">任务名</th>
+				<th >异常信息</th>
+                <th width="150">异常时间</th>
+			</tr>
+		</thead>
+		<tbody id ="error_list">
+            <td>1</td>
+            <td>任务名</td>
+            <td>异常信息</td>
+            <td>异常时间</td>
+
+		</tbody>
+	</table>
+    <label id="responseText"></label>
+</article>
+
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="{{ url_for('static', filename='admin/lib/jquery/1.9.1/jquery.min.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/lib/layer/2.4/layer.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/static/h-ui/js/H-ui.min.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/static/h-ui.admin/js/H-ui.admin.js')}}"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="{{ url_for('static', filename='admin/lib/jquery.validation/1.14.0/jquery.validate.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/lib/jquery.validation/1.14.0/validate-methods.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/lib/jquery.validation/1.14.0/messages_zh.js')}}"></script>
+<script type="text/javascript">
+$(function(){
+    error_list()
+});
+
+function error_list() {
+    context = ""
+        data = $.ajax({
+                url: "/error_list"+"?spider_name="+$("#spider_name").val(),
+                async: true,
+                dataType: "json",
+                success: function (result) {
+                    mydata = result //返回的result为json格式的数据
+                    $("#spider_list").html(context);
+                    $.each(mydata['items'],function(i,data){
+
+                        context += "<tr class=\"text-c\">";
+				        context += "<td>" + data['id'] + "</td>";
+				        context += "<td>" + data['spider_name'] + "</td>";
+				        context += "<td>" + data['err_msg'] + "</td>";
+                        context += "<td>" + data['err_time'] + "</td>";
+
+                    });
+                    $("#error_list").html(context);
+                }
+            })
+
+}
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

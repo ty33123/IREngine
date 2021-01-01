@@ -1,0 +1,52 @@
+@charset "utf-8";
+html{*overflow:auto;}
+#hd{padding:20px 10px;}
+#bd{margin-bottom:40px;}
+
+.resultArea{float:left;width:100%;}
+.resultArea .resultTotal{position:relative;padding-left:30px;margin-bottom:20px;}
+.resultArea .resultTotal .info{color:#9a9a9a;}
+.resultArea .resultTotal .orderOpt{position:absolute;right:50px;}
+.resultArea .resultTotal .orderOpt a{margin-right:10px;color:#0080cc;}
+
+/*搜索结果列表区域*/
+.resultArea .resultList{padding-left:30px;}
+.resultArea .resultList .resultItem{margin-bottom:20px;}
+.resultArea .resultList .resultItem{margin-bottom:30px;}
+.resultArea .resultList .itemHead{margin-bottom:5px;color:#767676;} 
+.resultArea .resultList .itemHead .keyWord{color:#d90909;}
+.resultArea .resultList .itemBody .keyWord{color:#d90909;}
+.resultArea .resultList .itemHead a.title{font-size:16px;color:#0080cc;text-decoration:underline;}
+.resultArea .resultList .itemHead .value{color: #fdfffd;}
+.resultArea .resultList .itemHead .divsion{margin:0 5px;}
+.resultArea .resultList .itemHead .fileType{margin-right:10px;}
+
+/*搜索内容主体*/
+.resultArea .resultList .itemBody{margin-bottom:5px;line-height:18px;width:90%;}
+.resultArea .resultList .itemFoot{color:#008000;}
+.resultArea .resultList .itemFoot .info{margin-right:10px;}
+
+.resultArea .pagination{margin-bottom:25px;padding-left:32px;}
+
+
+
+
+/*====================================
+  分页信息（表格依赖样式）
+  ===================================*/
+.pagination{font-size:14px;}
+.pagination a {text-decoration: none;border: solid 1px;	}
+.pagination .pxofy{float:left;margin-left: 5px;height:25px;*padding-top:1px;}	
+.pagination a, .pagination span {display: block;float: left;height:18px;line-height:18px;padding:0 6px;margin-right: 5px;font-family:Arial, Helvetica, sans-serif !important;}
+.pagination .current {cursor:default;border: solid 1px ;}
+.pagination .prev, .pagination .next{*line-height:22px;}
+
+/*分页样式*/
+.pagination a{color: #032F54;border-color:#8EB2D2;}
+.pagination a:hover{color:#023054;border-color:#8EB2D2;background:#B8DFFB;}
+.pagination .current{color:#fff;border-color:#5c9bc4;background:#89B8D8;}
+.pagination .current.prev, .pagination .current.next{color:#B9B9B9;border-color:#D3D3D3;background:#fff;}
+.pagination .pxofy{color: #023054;}
+
+
+

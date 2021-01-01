@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="utf-8">
+        <title>百闻-新闻检索引擎!</title>
+        <meta name="keywords" content="百闻-新闻检索引擎!" />
+        <meta name="description" content="百闻-新闻检索引擎，搜你一切想要的！。" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+        <link rel="shortcut icon" href="{{ url_for('static', filename='index/favicon.ico')}}" type="image/x-icon" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='index/css/style.css')}}" type="text/css" >
+        <script src="{{ url_for('static', filename='index/js/jquery.min.js')}}"></script>
+    </head>
+    
+    <body>
+        <div id="content" data-customize="true" data-customtheme="true" class="default-bg">
+            <div class="main-index">
+                <div class="container content-box">
+                    <section class="sousuo">
+                        <div class="logo">
+                            <a href="/" title="百闻-新闻检索引擎!">
+                                <img src="{{ url_for('static', filename='index/images/logo.png')}}" height="70px">
+                            </a>
+                        </div>
+                        <div class="search">
+                            <div class="search-box">
+                                <img class="search-icon" src="{{ url_for('static', filename='index/images/search.png')}}">
+                                <input type="text" id="txt" class="search-input" autofocus="autofocus">
+                                <button class="search-btn icon" id="search-btn">搜索</button>
+                            </div>
+                            <div class="box search-hot-text" id="box" style="display: none;">
+                                <ul></ul>
+                            </div>
+                            <div class="search-engine" style="display: none;">
+                                <div class="search-engine-head">
+                                    <strong class="search-engine-tit">默认搜索引擎：</strong>
+                                    <div class="search-engine-tool">搜索联想：
+                                        <span id="hot-btn" class="off"></span></div>
+                                </div>
+                                <ul class="search-engine-list"></ul>
+                            </div>
+                        </div>
+                        
+
+                        <div class="hot-news-box" >
+                            <table width="580px" cellpadding="2px">
+                                <thead >
+                                    <th width="5%" ></th><th width="85%"></th><th></th>
+                                </thead>
+                                <tbody id="hot-news" >
+                                    <tr >
+                                        <td><span class="c-font-normal" >1</span></td>
+                                        <td><a href="www.baidu.com">这是一个标题</a></td>
+                                        <td><span class="c-font-normal" >489万</span></td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <footer class="footer text-center ">
+            <div class="container">
+                <p>Copyright ©2020 检索小队 | <a href="/spider" >定时任务管理</a></p>
+            </div>
+        </footer>
+        <script src="{{ url_for('static', filename='index/js/juso.js')}}"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $(function() {
+                    data = $.ajax({
+                        url: "/get_readtop.json",
+                        async: true,
+                        dataType: "json",
+                        success: function(result) {
+                            var dataObj = result.items,
+                            //返回的result为json格式的数据
+                            con = "";
+                            $.each(dataObj,
+                            function(index, item) {
+                                title = item.title.substr(0, 20) + "...";
+                                con += "<tr ><td><span class=\"c-font-normal\" >"+ (parseInt(index)+1)+"</span></td>";
+                                con += "<td><a href='/re_direct?url=" + item.url + "' title='" + item.title + "'>" + title +"</a></td>";
+                                con += "<td><span class=\"c-font-normal\" >" + item.read_counts + "</span></td></tr>";
+                            });
+                            //console.log(con);    //可以在控制台打印一下看看，这是拼起来的标签和数据
+                            $("#hot-news").html(con); //把内容入到这个div中即完成
+                        }
+                    });
+                });
+            });
+        </script>
+    </body>
+
+</html>

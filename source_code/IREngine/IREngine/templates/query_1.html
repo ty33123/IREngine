@@ -1,0 +1,228 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="max-age=7200" />
+<meta http-equiv="Expires" content="Mon, 20 Jul 2013 23:00:00 GMT" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='admin/static/h-ui/css/H-ui.min.css')}}" />
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='admin/static/h-ui.admin/css/H-ui.admin.css')}}" />
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='admin/lib/Hui-iconfont/1.0.8/iconfont.css')}}"  />
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='admin/static/h-ui.admin/skin/default/skin.css')}}"  id="skin" />
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='admin/static/h-ui.admin/css/style.css')}}"  />
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='admin/result.css')}}"  />
+<!--[if IE 6]>
+
+<![endif]-->
+<title>百闻-新闻检索引擎</title>
+
+</head>
+<body class="pos-r" style="background-color:#ffffff">
+<div class="pos-a" style="width:300px;right:0;top:0; bottom:0; height:100%; border-right:1px solid #e5e5e5; background-color:#f5f5f5; overflow:auto;">
+    <ul class="commentList">
+      <li class="item cl">
+
+          </br>
+          <header class="comment-header">
+            <div class="comment-meta"> <b>大家都关注：</b></div>
+          </header>
+          <div class="comment-body" id="hot_read">
+            <p><a href="#">正在加载...</a></p>
+
+          </div>
+          <header class="comment-header">
+            <div class="comment-meta"> <b>相关搜索：</b></div>
+          </header>
+          <div class="comment-body" id="rel_query">
+            <p><a href="#">正在加载... </a></p>
+          </div>
+      </li>
+    </ul>
+
+</div>
+<div style="margin-right:300px;">
+	<div class="page-container">
+		<div class="text-c">
+            <span style="float:left;margin:0px 480px;"><a href="/"><img src="static/logo_small.png" alt="百闻搜搜"></a></span>
+			<input type="text" name="" id="search_text" placeholder=" 检索内容" style="width:500px" value="{{ wd }}" class="input-text radius">
+			<button name="" id="" class="btn radius" onclick="get_results()">
+                <i class="Hui-iconfont">&#xe665;</i> 搜新闻
+            </button>
+            <div class="text-c search-hot-text" id="box" style="display: none;">
+                <ul></ul>
+            </div>
+		</div>
+
+		<div class="mt-20">
+			<div class="resultArea">
+
+                    <p  class="resultTotal"></p>
+
+
+
+                <div class="resultList">
+                   
+                </div>
+
+               
+                <div class="pageing" style="border-top:none;display:block"> 
+                    
+                </div>
+
+            </div>
+		</div>
+        <div id="show_news" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content radius">
+                    <div class="modal-header">
+                        <h3 class="modal-title" align="center">新闻查阅</h3>
+                        <a class="close" data-dismiss="modal" aria-hidden="true" href="javascript:void();">×</a>
+                    </div>
+                    <div class="modal-body">
+                        
+                        <table class="table table-bg">
+                            <tbody id="detail_news">
+                                <!---此处显示公文显示内容-->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+	    <div id="sim_news" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content radius">
+                    <div class="modal-header">
+                        <h3 class="modal-title" align="center">相关新闻</h3>
+                        <a class="close" data-dismiss="modal" aria-hidden="true" href="javascript:void();">×</a>
+                    </div>
+                    <div class="modal-body" id="sim_show">
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.pageing {
+	border-top: #bbb solid 1px;
+	margin-top: 15px;
+	text-align: center;
+	line-height: 40px;
+}
+
+.pageing span {
+	margin: 0px 7px;
+}
+</style>
+
+
+
+<!--footer 作为公共模版分离出去-->
+<script type="text/javascript" src="{{ url_for('static', filename='admin/lib/jquery/1.9.1/jquery.min.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/lib/layer/2.4/layer.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/static/h-ui/js/H-ui.min.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/static/h-ui.admin/js/H-ui.admin.js')}}"></script>
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="{{ url_for('static', filename='admin/lib/zTree/v3/js/jquery.ztree.all-3.5.min.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/lib/My97DatePicker/4.8/WdatePicker.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/lib/datatables/1.10.0/jquery.dataTables.min.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/lib/laypage/1.2/laypage.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/query.js')}}"></script>
+
+<script type="application/javascript">
+    var thisSearch = '/s?wd=';
+$('#search_text').keyup(function(e) {
+    if (e.keyCode === 38 || e.keyCode === 40 ||e.keyCode === 27) {
+        $('#box').css('display', 'none');
+        return
+    }
+    var dat = {
+        wd: $('#search_text').val()
+    };
+    if (e.keyCode == 13) {
+        var textValue = $('#search_text').val();
+        if (textValue != '') {
+            window.open(thisSearch + $('#search_text').val(), '_self')
+        }
+    };
+    if ($('#search_text').val() != '') {
+        $('#box ul').text('');
+        $('#box').css('display', 'block');
+        $.ajax({
+            type: "GET",
+            url: "https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su",
+            async: true,
+            data: dat,
+            dataType: 'jsonp',
+            jsonp: 'cb',
+            success: function(res) {
+                for (var i = 0; i < res.s.length; i++) {
+                    resLength = res.s.length;
+                    var oli_i = '<li>' + res.s[i] + '</li>';
+                    $('#box ul').append(oli_i);
+                    $('#box ul li').eq(i).click(function() {
+                        $('#search_text').val(this.innerHTML);
+                        window.open(thisSearch + this.innerHTML, '_self');
+                        $('#box ul').html('');
+                        $('#box').css('display', 'none')
+                    })
+                }
+                ;
+            },
+            error: function(res) {
+                console.log(res)
+            }
+        });
+    } else {
+        $('#box ul').html('')
+    }
+    ;
+});
+</script>
+<style type="text/css">
+
+.search-hot-text {
+	position:absolute;
+	z-index:100;
+	width:33%;
+	border-radius:0 0 10px 10px;
+	background:#fff;
+	box-shadow:0 4px 5px 0 #cccccc94;
+    float:left;
+    margin:0px 292px;
+}
+.search-hot-text ul li {
+	border-top:1px solid #f2f2f2;
+    text-align:left;
+	line-height:30px;
+	font-size:14px;
+	padding:0 25px;
+	color:#777;
+	cursor:pointer
+}
+.search-hot-text ul {
+	margin:0
+}
+
+</style>
+</body>
+</html>

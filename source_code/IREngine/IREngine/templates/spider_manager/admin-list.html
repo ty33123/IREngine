@@ -1,0 +1,241 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="refresh" content="300">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/lib/html5shiv.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/lib/respond.min.js')}}"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='admin/static/h-ui/css/H-ui.min.css')}}" />
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='admin/static/h-ui.admin/css/H-ui.admin.css')}}" />
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='admin/lib/Hui-iconfont/1.0.8/iconfont.css')}}" />
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='admin/static/h-ui.admin/skin/default/skin.css')}}" id="skin" />
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='admin/static/h-ui.admin/css/style.css')}}" />
+<!--[if IE 6]>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/lib/DD_belatedPNG_0.0.8a-min.js')}}"></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>定时任务监控页面</title>
+</head>
+<body>
+<nav class="breadcrumb"><a href="/"><i class="Hui-iconfont">&#xe67f;</i></a> 定时任务监控页面 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<div class="text-c"> 任务查找：
+		<input type="text" class="input-text" style="width:250px" placeholder="输入任务名称" id="spider_name" name="">
+		<button type="submit" class="btn btn-success" id="" name="" onclick="spider_list()"><i class="Hui-iconfont">&#xe665;</i> 搜任务</button>
+	</div>
+	<div class="cl pd-5 bg-1 bk-gray mt-20">
+        <span class="l">
+            <a href="javascript:;" onclick="admin_add('添加任务','admin-add.html','800','500')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加任务</a>
+            <a href="javascript:;" onclick="err_list('任务异常列表','err-list.html','800','500')" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe667;</i> 异常列表</a>
+        </span>
+        <span class="r">共有任务：<strong id ="spider_num">0</strong> 个</span>
+    </div>
+	<table class="table table-border table-bordered table-bg">
+		<thead>
+			<tr>
+				<th scope="col" colspan="12">任务列表</th>
+			</tr>
+			<tr class="text-c">
+				<th width="25"><input type="checkbox" name="" value=""></th>
+				<th width="40">ID</th>
+				<th width="90">任务名</th>
+				<th>任务描述</th>
+                <th width="90">上次采集量</th>
+				<th width="90">总采集量</th>
+				<th width="30">异常</th>
+                <th width="150">上一次启动时间</th>
+				<th width="150">下一次启动时间</th>
+				<th width="30">启用</th>
+				<th width="100">操作</th>
+			</tr>
+		</thead>
+		<tbody id ="spider_list">
+
+
+		</tbody>
+	</table>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="{{ url_for('static', filename='admin/lib/jquery/1.9.1/jquery.min.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/lib/layer/2.4/layer.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/static/h-ui/js/H-ui.min.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/static/h-ui.admin/js/H-ui.admin.js')}}"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="{{ url_for('static', filename='admin/lib/My97DatePicker/4.8/WdatePicker.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/lib/datatables/1.10.0/jquery.dataTables.min.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/lib/laypage/1.2/laypage.js')}}"></script>
+<script type="text/javascript">
+/*
+	参数解释：
+	title	标题
+	url		请求的url
+	id		需要操作的数据id
+	w		弹出层宽度（缺省调默认值）
+	h		弹出层高度（缺省调默认值）
+*/
+/*爬虫-增加*/
+function admin_add(title,url,w,h){
+	layer_show(title,url,w,h);
+}
+
+/*异常信息列表*/
+function err_list(title,url,w,h){
+	layer_show(title,url,w,h);
+}
+
+/*管理员-删除*/
+function admin_del(obj,id){
+	layer.confirm('确认要删除吗？',function(index){
+		$.ajax({
+			type: 'POST',
+			url: '',
+			dataType: 'json',
+			success: function(data){
+				$(obj).parents("tr").remove();
+				layer.msg('已删除!',{icon:1,time:1000});
+			},
+			error:function(data) {
+				console.log(data.msg);
+			},
+		});
+	});
+}
+
+/*管理员-编辑*/
+function admin_edit(title,url,id,w,h){
+	layer_show(title,url,w,h);
+}
+
+function fix_bug(obj,id) {
+    val = $(obj).parents("tr").find("td:nth-child(7) > span").text();
+    if(val == "是")
+    {
+        layer.confirm('确定已经修复异常了吗？', function (index) {
+            //此处请求后台程序，下方是成功后的前台处理……
+            data = $.ajax({
+                url: "/fix_bug" + "?id=" + id,
+                async: true,
+                dataType: "json",
+                success: function (result) {
+                    console.log(result)
+                }
+            })
+            layer.msg('已修复!', {icon: 6, time: 1000});
+            //使用  setTimeout（）方法设定定时2000毫秒
+            setTimeout(function(){ window.location.reload();},1500);
+        })
+    }
+    else
+    {
+        layer.msg('爬虫无异常!', {icon: 5, time: 1000});
+    }
+
+}
+
+
+/*管理员-停用*/
+function admin_stop(obj,id){
+	layer.confirm('确认要停用吗？',function(index){
+		//此处请求后台程序，下方是成功后的前台处理……
+        data = $.ajax({
+                url: "/pause"+"?id="+id,
+                async: true,
+                dataType: "json",
+                success: function (result) {
+                    console.log(result)
+                }
+                })
+		$(obj).parents("tr").find(".td-manage").prepend('<a onClick="admin_start(this,'+id+')" href="javascript:;" title="启用" style="text-decoration:none"><i class="Hui-iconfont">&#xe615;</i></a>');
+		$(obj).parents("tr").find(".td-status").html('<span class="label label-default radius">已禁用</span>');
+		$(obj).remove();
+		layer.msg('已停用!',{icon: 5,time:1000});
+	});
+}
+
+/*管理员-启用*/
+function admin_start(obj,id){
+	layer.confirm('确认要启用吗？',function(index){
+		//此处请求后台程序，下方是成功后的前台处理……
+        data = $.ajax({
+                url: "/resume"+"?id="+id,
+                async: true,
+                dataType: "json",
+                success: function (result) {
+                    console.log(result)
+                }
+        })
+
+		$(obj).parents("tr").find(".td-manage").prepend('<a onClick="admin_stop(this,'+id+')" href="javascript:;" title="停用" style="text-decoration:none"><i class="Hui-iconfont">&#xe631;</i></a>');
+		$(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已启用</span>');
+		$(obj).remove();
+		layer.msg('已启用!', {icon: 6,time:1000});
+	});
+}
+
+$(function(){
+    spider_list()
+});
+
+function spider_list() {
+    context = ""
+        data = $.ajax({
+                url: "/spider_list"+"?name="+$("#spider_name").val(),
+                async: true,
+                dataType: "json",
+                success: function (result) {
+                    mydata = result //返回的result为json格式的数据
+                    $("#spider_num").html(mydata['items'].length);
+                    $("#spider_list").html(context);
+                    $.each(mydata['items'],function(i,data){
+
+                        context += "<tr class=\"text-c\">";
+                        context += "<td><input type=\"checkbox\" value=\"1\" name=\"\"></td>";
+				        context += "<td>" + data['id'] + "</td>";
+				        context += "<td>" + data['name'] + "</td>";
+				        context += "<td><a target=\"_blank\" href='" + data['url'] +"'>" + data['desc'] + "</a></td>";
+
+                        context += "<td>" + data['last_acq_num'] + "</td>";
+                        context += "<td>" + data['acq_num'] + "</td>";
+
+				        temp1 = data['is_error']
+                        if(temp1==false)
+                        {
+                            context += "<td><span class=\"label label radius\">否</span></td>";
+                        }
+                        else
+                        {
+                            context += "<td><span class=\"label label-success radius\">是</span></td>";
+                        }
+
+                        context += "<td>" + data['last_run_time'] + "</td>";
+				        context += "<td>" + data['next_run_time'] + "</td>";
+                        temp = data['enabled']
+                        if(temp==false)
+                        {
+                            context += "<td class=\"td-status\"><span class=\"label label radius\">已禁用</span></td>";
+                            context +="<td class=\"td-manage\"><a style=\"text-decoration:none\" onClick=\"admin_start(this,'"+data['id']+"')\" href=\"javascript:;\" title=\"启用\"><i class=\"Hui-iconfont\">&#xe615;</i></a> <a title=\"修复异常\" href=\"javascript:;\" onclick=\"fix_bug(this,'"+data['id']+"')\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6df;</i></a> </td> </tr>";
+                        }
+                        else
+                        {
+                            context += "<td class=\"td-status\"><span class=\"label label-success radius\">已启用</span></td>";
+                            context +="<td class=\"td-manage\"><a style=\"text-decoration:none\" onClick=\"admin_stop(this,'"+data['id']+"')\" href=\"javascript:;\" title=\"停用\"><i class=\"Hui-iconfont\">&#xe631;</i></a> <a title=\"修复异常\" href=\"javascript:;\" onclick=\"fix_bug(this,'"+data['id']+"')\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6df;</i></a> </td> </tr>";
+                        }
+
+
+                    });
+                    $("#spider_list").html(context);
+                }
+            })
+
+}
+
+</script>
+</body>
+</html>

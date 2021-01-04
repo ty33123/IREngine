@@ -21,6 +21,12 @@
 * **文档模型** ： BM25模型
 
 ## 文件说明
+ 运行IREngine.py启动应用。首次运行请先依次运行IREngine\IREngine\spider 下的1_init_indexes.py,2_init_term_index.py,3_gen2gram.py文件将生成的索引文件复制到IREngine\index_file目录即可。
 
 
+* **依赖支持：** ：
+* flask
+* jieba
+* apscheduler
+* pickle
 # -
